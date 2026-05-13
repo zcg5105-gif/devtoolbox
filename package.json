@@ -9,7 +9,26 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
-    "vue": "^2.6.14"
+    "cron-parser": "^4.9.0",
+    "cronstrue": "^3.14.0",
+    "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.20",
+    "diff": "^9.0.0",
+    "element-ui": "^2.15.14",
+    "highlight.js": "^11.11.1",
+    "javascript-obfuscator": "^5.4.2",
+    "jsqr": "^1.4.0",
+    "marked": "^18.0.3",
+    "node-sass": "^9.0.0",
+    "qrcode": "^1.5.4",
+    "sass-loader": "^16.0.8",
+    "sql-formatter": "^15.7.4",
+    "ua-parser-js": "^2.0.9",
+    "vue": "^2.6.14",
+    "vue-router": "^3.6.5",
+    "vuedraggable": "^2.24.3",
+    "vuex": "^3.6.2",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
