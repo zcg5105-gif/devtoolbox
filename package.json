@@ -19,7 +19,6 @@
     "javascript-obfuscator": "^5.4.2",
     "jsqr": "^1.4.0",
     "marked": "^18.0.3",
-    "node-sass": "^9.0.0",
     "qrcode": "^1.5.4",
     "sass-loader": "^16.0.8",
     "sql-formatter": "^15.7.4",
@@ -38,6 +37,7 @@
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
+    "sass": "^1.99.0",
     "vue-template-compiler": "^2.6.14"
   },
   "eslintConfig": {
