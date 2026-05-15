@@ -155,6 +155,13 @@ export const toolCategories = [
         tags: ['user-agent', 'ua', 'browser', 'device', 'parser']
       },
       {
+        name: '身份证解析',
+        path: '/tool/id-card',
+        icon: 'el-icon-postcard',
+        description: '验证中国居民身份证号码，解析地区码、出生日期、年龄、性别和校验码。纯前端完成，不保存数据。',
+        tags: ['id-card', 'identity', 'checksum', 'validation', 'china']
+      },
+      {
         name: 'SQL格式化',
         path: '/tool/sql',
         icon: 'el-icon-s-data',

@@ -33,6 +33,7 @@ const HashGenerator = () => import(/* webpackChunkName: "tool-hash" */ '../views
 const PasswordGenerator = () => import(/* webpackChunkName: "tool-password" */ '../views/tools/PasswordGenerator.vue')
 const IpLookup = () => import(/* webpackChunkName: "tool-ip-lookup" */ '../views/tools/IpLookup.vue')
 const UserAgentParser = () => import(/* webpackChunkName: "tool-user-agent" */ '../views/tools/UserAgentParser.vue')
+const IdCardParser = () => import(/* webpackChunkName: "tool-id-card" */ '../views/tools/IdCardParser.vue')
 const AsciiTable = () => import(/* webpackChunkName: "tool-ascii-table" */ '../views/tools/AsciiTable.vue')
 const RandomGenerator = () => import(/* webpackChunkName: "tool-random" */ '../views/tools/RandomGenerator.vue')
 const Timer = () => import(/* webpackChunkName: "tool-timer" */ '../views/tools/Timer.vue')
@@ -189,6 +190,11 @@ const routes = [
     path: '/tool/user-agent',
     name: 'UserAgentParser',
     component: UserAgentParser
+  },
+  {
+    path: '/tool/id-card',
+    name: 'IdCardParser',
+    component: IdCardParser
   },
   {
     path: '/tool/ascii-table',
