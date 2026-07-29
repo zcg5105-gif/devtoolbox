@@ -27,6 +27,13 @@ export const toolCategories = [
         tags: ['csv', 'json', 'convert', 'export']
       },
       {
+        name: 'Excel 数据比对',
+        path: '/tool/excel-compare',
+        icon: 'el-icon-document-copy',
+        description: '上传两个 Excel，按表头或列号映射字段，并根据 key 输出新增、删除和字段差异。',
+        tags: ['excel', 'xlsx', 'xls', 'compare', 'diff']
+      },
+      {
         name: 'XML/JSON转换',
         path: '/tool/xml-json',
         icon: 'el-icon-tickets',

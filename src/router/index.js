@@ -28,6 +28,7 @@ const CssGradientGenerator = () => import(/* webpackChunkName: "tool-css-gradien
 const CssBoxShadowGenerator = () => import(/* webpackChunkName: "tool-css-shadow" */ '../views/tools/CssBoxShadowGenerator.vue')
 const ColorPalette = () => import(/* webpackChunkName: "tool-color-palette" */ '../views/tools/ColorPalette.vue')
 const CsvJsonConverter = () => import(/* webpackChunkName: "tool-csv-json" */ '../views/tools/CsvJsonConverter.vue')
+const ExcelCompare = () => import(/* webpackChunkName: "tool-excel-compare" */ '../views/tools/ExcelCompare.vue')
 const XmlJsonConverter = () => import(/* webpackChunkName: "tool-xml-json" */ '../views/tools/XmlJsonConverter.vue')
 const HashGenerator = () => import(/* webpackChunkName: "tool-hash" */ '../views/tools/HashGenerator.vue')
 const PasswordGenerator = () => import(/* webpackChunkName: "tool-password" */ '../views/tools/PasswordGenerator.vue')
@@ -165,6 +166,11 @@ const routes = [
     path: '/tool/csv-json',
     name: 'CsvJsonConverter',
     component: CsvJsonConverter
+  },
+  {
+    path: '/tool/excel-compare',
+    name: 'ExcelCompare',
+    component: ExcelCompare
   },
   {
     path: '/tool/xml-json',
