@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import yaml from 'js-yaml'
+import * as yaml from 'js-yaml'
 
 const SAMPLE_YAML = [
   'name: DevToolbox',

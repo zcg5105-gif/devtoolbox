@@ -29,17 +29,27 @@ const CssBoxShadowGenerator = () => import(/* webpackChunkName: "tool-css-shadow
 const ColorPalette = () => import(/* webpackChunkName: "tool-color-palette" */ '../views/tools/ColorPalette.vue')
 const CsvJsonConverter = () => import(/* webpackChunkName: "tool-csv-json" */ '../views/tools/CsvJsonConverter.vue')
 const ExcelCompare = () => import(/* webpackChunkName: "tool-excel-compare" */ '../views/tools/ExcelCompare.vue')
+const YamlJsonConverter = () => import(/* webpackChunkName: "tool-yaml-json" */ '../views/tools/YamlJsonConverter.vue')
+const PathTester = () => import(/* webpackChunkName: "tool-path-tester" */ '../views/tools/PathTester.vue')
 const XmlJsonConverter = () => import(/* webpackChunkName: "tool-xml-json" */ '../views/tools/XmlJsonConverter.vue')
 const HashGenerator = () => import(/* webpackChunkName: "tool-hash" */ '../views/tools/HashGenerator.vue')
 const PasswordGenerator = () => import(/* webpackChunkName: "tool-password" */ '../views/tools/PasswordGenerator.vue')
+const IdGenerator = () => import(/* webpackChunkName: "tool-id-generator" */ '../views/tools/IdGenerator.vue')
+const MockDataGenerator = () => import(/* webpackChunkName: "tool-mock-data" */ '../views/tools/MockDataGenerator.vue')
 const IpLookup = () => import(/* webpackChunkName: "tool-ip-lookup" */ '../views/tools/IpLookup.vue')
 const UserAgentParser = () => import(/* webpackChunkName: "tool-user-agent" */ '../views/tools/UserAgentParser.vue')
+const UrlParamsTool = () => import(/* webpackChunkName: "tool-url-params" */ '../views/tools/UrlParamsTool.vue')
+const JwtBatchChecker = () => import(/* webpackChunkName: "tool-jwt-batch" */ '../views/tools/JwtBatchChecker.vue')
+const LogViewer = () => import(/* webpackChunkName: "tool-log-viewer" */ '../views/tools/LogViewer.vue')
 const IdCardParser = () => import(/* webpackChunkName: "tool-id-card" */ '../views/tools/IdCardParser.vue')
 const AsciiTable = () => import(/* webpackChunkName: "tool-ascii-table" */ '../views/tools/AsciiTable.vue')
 const RandomGenerator = () => import(/* webpackChunkName: "tool-random" */ '../views/tools/RandomGenerator.vue')
 const Timer = () => import(/* webpackChunkName: "tool-timer" */ '../views/tools/Timer.vue')
 const UnitConverter = () => import(/* webpackChunkName: "tool-unit-converter" */ '../views/tools/UnitConverter.vue')
 const StickyNotes = () => import(/* webpackChunkName: "tool-sticky-notes" */ '../views/tools/StickyNotes.vue')
+const HtmlEntityCodec = () => import(/* webpackChunkName: "tool-html-entity" */ '../views/tools/HtmlEntityCodec.vue')
+const TextStats = () => import(/* webpackChunkName: "tool-text-stats" */ '../views/tools/TextStats.vue')
+const ImageBase64 = () => import(/* webpackChunkName: "tool-image-base64" */ '../views/tools/ImageBase64.vue')
 
 const routes = [
   {
@@ -173,6 +183,16 @@ const routes = [
     component: ExcelCompare
   },
   {
+    path: '/tool/yaml-json',
+    name: 'YamlJsonConverter',
+    component: YamlJsonConverter
+  },
+  {
+    path: '/tool/path-tester',
+    name: 'PathTester',
+    component: PathTester
+  },
+  {
     path: '/tool/xml-json',
     name: 'XmlJsonConverter',
     component: XmlJsonConverter
@@ -188,6 +208,16 @@ const routes = [
     component: PasswordGenerator
   },
   {
+    path: '/tool/id-generator',
+    name: 'IdGenerator',
+    component: IdGenerator
+  },
+  {
+    path: '/tool/mock-data',
+    name: 'MockDataGenerator',
+    component: MockDataGenerator
+  },
+  {
     path: '/tool/ip-lookup',
     name: 'IpLookup',
     component: IpLookup
@@ -196,6 +226,21 @@ const routes = [
     path: '/tool/user-agent',
     name: 'UserAgentParser',
     component: UserAgentParser
+  },
+  {
+    path: '/tool/url-params',
+    name: 'UrlParamsTool',
+    component: UrlParamsTool
+  },
+  {
+    path: '/tool/jwt-batch',
+    name: 'JwtBatchChecker',
+    component: JwtBatchChecker
+  },
+  {
+    path: '/tool/log-viewer',
+    name: 'LogViewer',
+    component: LogViewer
   },
   {
     path: '/tool/id-card',
@@ -226,6 +271,21 @@ const routes = [
     path: '/tool/sticky-notes',
     name: 'StickyNotes',
     component: StickyNotes
+  },
+  {
+    path: '/tool/html-entity',
+    name: 'HtmlEntityCodec',
+    component: HtmlEntityCodec
+  },
+  {
+    path: '/tool/text-stats',
+    name: 'TextStats',
+    component: TextStats
+  },
+  {
+    path: '/tool/image-base64',
+    name: 'ImageBase64',
+    component: ImageBase64
   }
 ]
 

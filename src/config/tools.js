@@ -34,6 +34,20 @@ export const toolCategories = [
         tags: ['excel', 'xlsx', 'xls', 'compare', 'diff']
       },
       {
+        name: 'YAML / JSON 转换器',
+        path: '/tool/yaml-json',
+        icon: 'el-icon-tickets',
+        description: 'YAML 与 JSON 双向转换，支持格式化、复制和错误提示。',
+        tags: ['yaml', 'json', 'convert', 'format']
+      },
+      {
+        name: 'JSONPath / XPath 测试器',
+        path: '/tool/path-tester',
+        icon: 'el-icon-search',
+        description: '对 JSON 和 XML 运行路径表达式，快速查看匹配结果。',
+        tags: ['jsonpath', 'xpath', 'json', 'xml', 'query']
+      },
+      {
         name: 'XML/JSON转换',
         path: '/tool/xml-json',
         icon: 'el-icon-tickets',
@@ -89,6 +103,20 @@ export const toolCategories = [
         icon: 'el-icon-edit-outline',
         description: '实时编辑和预览 Markdown，支持代码高亮、图片上传和导出。',
         tags: ['markdown', 'editor', 'preview', 'html']
+      },
+      {
+        name: 'HTML 实体编解码',
+        path: '/tool/html-entity',
+        icon: 'el-icon-document',
+        description: 'HTML 实体转义、反转义和 Unicode 数字实体编码。',
+        tags: ['html', 'entity', 'escape', 'unicode']
+      },
+      {
+        name: '文本统计分析',
+        path: '/tool/text-stats',
+        icon: 'el-icon-data-analysis',
+        description: '统计字符、字节、行数、词频和中英文数字构成。',
+        tags: ['text', 'stats', 'count', 'word']
       },
       {
         name: '文本差异对比',
@@ -162,6 +190,27 @@ export const toolCategories = [
         tags: ['user-agent', 'ua', 'browser', 'device', 'parser']
       },
       {
+        name: 'URL 参数解析与对比',
+        path: '/tool/url-params',
+        icon: 'el-icon-link',
+        description: '解析、编辑、重组 URL 查询参数，并对比两个 URL 的参数差异。',
+        tags: ['url', 'query', 'params', 'compare']
+      },
+      {
+        name: 'JWT 批量检查',
+        path: '/tool/jwt-batch',
+        icon: 'el-icon-key',
+        description: '批量解析 JWT Header/Payload，检查过期时间和常见 Claims。',
+        tags: ['jwt', 'token', 'batch', 'expire']
+      },
+      {
+        name: '日志格式化查看器',
+        path: '/tool/log-viewer',
+        icon: 'el-icon-document-copy',
+        description: '格式化 JSON Lines 和普通日志，支持级别识别、过滤和复制。',
+        tags: ['log', 'jsonl', 'filter', 'trace']
+      },
+      {
         name: '身份证解析',
         path: '/tool/id-card',
         icon: 'el-icon-postcard',
@@ -203,6 +252,20 @@ export const toolCategories = [
         icon: 'el-icon-key',
         description: '随机生成强密码或可记忆密码，支持批量生成、强度提示和本地历史记录。',
         tags: ['password', 'random', 'security', 'generator']
+      },
+      {
+        name: 'ID 生成与解析',
+        path: '/tool/id-generator',
+        icon: 'el-icon-postcard',
+        description: '生成 UUID、ULID、Snowflake 风格 ID，并解析可用时间信息。',
+        tags: ['uuid', 'ulid', 'snowflake', 'id']
+      },
+      {
+        name: 'Mock 数据生成器',
+        path: '/tool/mock-data',
+        icon: 'el-icon-magic-stick',
+        description: '按字段批量生成姓名、手机号、邮箱、地址和 UUID 等 JSON Mock 数据。',
+        tags: ['mock', 'fake', 'json', 'generator']
       },
       {
         name: '随机生成器',
@@ -253,6 +316,13 @@ export const toolCategories = [
         icon: 'el-icon-picture-outline',
         description: '本地压缩 JPEG、PNG、WebP 图片，支持批量处理和前后对比。',
         tags: ['image', 'compress', 'jpeg', 'png', 'webp']
+      },
+      {
+        name: '图片 Base64 转换',
+        path: '/tool/image-base64',
+        icon: 'el-icon-picture-outline',
+        description: '图片转 Data URL/Base64，并支持 Base64 还原预览和下载。',
+        tags: ['image', 'base64', 'dataurl', 'convert']
       },
       {
         name: '二维码生成器',
