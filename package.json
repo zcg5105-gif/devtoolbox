@@ -17,6 +17,8 @@
     "element-ui": "^2.15.14",
     "highlight.js": "^11.11.1",
     "javascript-obfuscator": "^5.4.2",
+    "js-yaml": "^5.2.2",
+    "jsonpath-plus": "^10.4.0",
     "jsqr": "^1.4.0",
     "marked": "^18.0.3",
     "qrcode": "^1.5.4",
