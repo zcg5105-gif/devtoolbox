@@ -37,8 +37,12 @@
           :key="tool.path"
           shadow="hover"
           class="tool-card"
+          tabindex="0"
           :body-style="{ padding: '0' }"
           @click.native="openTool(tool.path)"
+          @keyup.enter.native="openTool(tool.path)"
+          @mouseenter.native="preloadTool(tool.path)"
+          @focus.native="preloadTool(tool.path)"
         >
           <div class="tool-card__body">
             <div class="tool-card__icon">
@@ -62,6 +66,7 @@
 
 <script>
 import { toolCategories } from '@/config/tools'
+import { preloadRoute } from '@/router/toolRoutes'
 
 export default {
   name: 'HomeView',
@@ -109,6 +114,9 @@ export default {
     }
   },
   methods: {
+    preloadTool(path) {
+      preloadRoute(path)
+    },
     openTool(path) {
       this.$router.push(path)
     }

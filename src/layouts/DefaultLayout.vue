@@ -29,6 +29,12 @@
       </div>
     </header>
 
+    <div
+      v-if="isRouteLoading"
+      class="route-loading-bar"
+      aria-hidden="true"
+    ></div>
+
     <div class="layout-body">
       <aside
         class="sidebar"
@@ -62,6 +68,8 @@
               v-for="tool in category.tools"
               :key="tool.path"
               :index="tool.path"
+              @mouseenter.native="preloadTool(tool.path)"
+              @focus.native="preloadTool(tool.path)"
             >
               <i :class="tool.icon"></i>
               <span slot="title">{{ tool.name }}</span>
@@ -87,6 +95,7 @@
 <script>
 import ThemeToggle from '@/components/ThemeToggle.vue'
 import { toolCategories } from '@/config/tools'
+import { preloadIdleRoutes, preloadRoute } from '@/router/toolRoutes'
 
 export default {
   name: 'DefaultLayout',
@@ -98,17 +107,48 @@ export default {
       isSidebarCollapsed: false,
       isMobileSidebarOpen: false,
       isMobile: false,
+      isRouteLoading: false,
+      removeRouteBeforeHook: null,
+      removeRouteAfterHook: null,
+      removeRouteErrorHook: null,
       toolCategories
     }
   },
+  created() {
+    this.removeRouteBeforeHook = this.$router.beforeEach((to, from, next) => {
+      if (to.path !== from.path) {
+        this.isRouteLoading = true
+      }
+      next()
+    })
+    this.removeRouteAfterHook = this.$router.afterEach(() => {
+      this.isRouteLoading = false
+    })
+    this.removeRouteErrorHook = this.$router.onError(() => {
+      this.isRouteLoading = false
+    })
+  },
   mounted() {
     this.handleResize()
+    preloadIdleRoutes()
     window.addEventListener('resize', this.handleResize)
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize)
+    ;[
+      this.removeRouteBeforeHook,
+      this.removeRouteAfterHook,
+      this.removeRouteErrorHook
+    ].forEach(removeHook => {
+      if (typeof removeHook === 'function') {
+        removeHook()
+      }
+    })
   },
   methods: {
+    preloadTool(path) {
+      preloadRoute(path)
+    },
     toggleSidebar() {
       if (this.isMobile) {
         this.isMobileSidebarOpen = !this.isMobileSidebarOpen

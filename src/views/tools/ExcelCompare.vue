@@ -248,8 +248,6 @@
 </template>
 
 <script>
-import * as XLSX from 'xlsx'
-
 const {
   buildColumns,
   buildAutoMappings,
@@ -296,7 +294,8 @@ export default {
       keyMappingId: '',
       result: createEmptyResult(),
       hasResult: false,
-      resultTab: 'changed'
+      resultTab: 'changed',
+      xlsxModule: null
     }
   },
   computed: {
@@ -346,6 +345,12 @@ export default {
     }
   },
   methods: {
+    async loadXlsx() {
+      if (!this.xlsxModule) {
+        this.xlsxModule = await import(/* webpackChunkName: "lib-xlsx" */ 'xlsx')
+      }
+      return this.xlsxModule
+    },
     async handleFileChange(side, uploadFile) {
       const rawFile = uploadFile.raw
 
@@ -359,6 +364,7 @@ export default {
       }
 
       try {
+        const XLSX = await this.loadXlsx()
         const buffer = await rawFile.arrayBuffer()
         const workbook = XLSX.read(buffer, { type: 'array' })
         const sheetNames = workbook.SheetNames || []
@@ -383,10 +389,11 @@ export default {
       }
     },
     loadSelectedSheet(side) {
+      const XLSX = this.xlsxModule
       const state = this[side]
       const sheet = state.workbook && state.workbook.Sheets[state.selectedSheetName]
 
-      if (!sheet) {
+      if (!XLSX || !sheet) {
         state.rows = []
         state.columns = []
         state.errorMessage = state.selectedSheetName ? '选中的 Sheet 无法读取' : state.errorMessage
@@ -468,11 +475,12 @@ export default {
         this.$message.error(error.message || '比对失败')
       }
     },
-    exportResult() {
+    async exportResult() {
       if (!this.hasResult) {
         return
       }
 
+      const XLSX = await this.loadXlsx()
       const workbook = XLSX.utils.book_new()
 
       XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(this.result.changedCells), '字段差异')

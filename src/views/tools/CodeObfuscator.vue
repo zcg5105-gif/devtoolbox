@@ -11,6 +11,7 @@
           type="primary"
           size="small"
           icon="el-icon-lock"
+          :loading="isObfuscating"
           @click="obfuscateCode"
         >
           开始混淆
@@ -131,8 +132,6 @@
 </template>
 
 <script>
-import JavaScriptObfuscator from 'javascript-obfuscator'
-
 const SAMPLE_CODE = [
   'function greetUser(name) {',
   '  const message = `Hello, ${name}!`;',
@@ -161,7 +160,9 @@ export default {
         renameVariables: true,
         stringEncryption: false
       },
-      obfuscateTimer: null
+      obfuscateTimer: null,
+      obfuscatorModule: null,
+      isObfuscating: false
     }
   },
   computed: {
@@ -196,6 +197,15 @@ export default {
     window.clearTimeout(this.obfuscateTimer)
   },
   methods: {
+    async loadObfuscator() {
+      if (!this.obfuscatorModule) {
+        const module = await import(
+          /* webpackChunkName: "lib-javascript-obfuscator" */ 'javascript-obfuscator'
+        )
+        this.obfuscatorModule = module.default || module
+      }
+      return this.obfuscatorModule
+    },
     handleInput() {
       this.errorMessage = ''
       window.clearTimeout(this.obfuscateTimer)
@@ -206,7 +216,7 @@ export default {
     handleOptionChange() {
       this.obfuscateCode(false)
     },
-    obfuscateCode(showMessage = true) {
+    async obfuscateCode(showMessage = true) {
       const code = this.inputCode.trim()
 
       if (!code) {
@@ -216,6 +226,8 @@ export default {
       }
 
       try {
+        this.isObfuscating = true
+        const JavaScriptObfuscator = await this.loadObfuscator()
         const result = JavaScriptObfuscator.obfuscate(code, this.createObfuscatorOptions())
         this.outputCode = result.getObfuscatedCode()
         this.errorMessage = ''
@@ -230,6 +242,8 @@ export default {
         if (showMessage) {
           this.$message.error('混淆失败')
         }
+      } finally {
+        this.isObfuscating = false
       }
     },
     createObfuscatorOptions() {
