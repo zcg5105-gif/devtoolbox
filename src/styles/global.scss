@@ -130,6 +130,36 @@ textarea {
   padding-top: var(--topbar-height);
 }
 
+.route-loading-bar {
+  position: fixed;
+  top: var(--topbar-height);
+  right: 0;
+  left: 0;
+  z-index: 31;
+  height: 2px;
+  overflow: hidden;
+  background: var(--color-primary-soft);
+}
+
+.route-loading-bar::before {
+  display: block;
+  width: 42%;
+  height: 100%;
+  background: var(--color-primary);
+  content: '';
+  animation: route-loading-bar 0.9s ease-in-out infinite;
+}
+
+@keyframes route-loading-bar {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(260%);
+  }
+}
+
 .sidebar {
   position: fixed;
   top: var(--topbar-height);
