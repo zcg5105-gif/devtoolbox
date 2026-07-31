@@ -213,6 +213,106 @@ function getColumnLabel(columns, index) {
   return column ? column.label : columnIndexToLetter(index)
 }
 
+function buildColumnLookup(columns) {
+  return columns.reduce((target, column) => {
+    target[column.index] = column
+    return target
+  }, {})
+}
+
+function buildHorizontalDiffResult(options) {
+  const keyMappingId = options.keyMappingId
+  const leftColumnByIndex = buildColumnLookup(options.leftColumns || [])
+  const rightColumnByIndex = buildColumnLookup(options.rightColumns || [])
+  const columns = (options.mappings || [])
+    .filter(mapping => mapping.enabled && mapping.id !== keyMappingId)
+    .map(mapping => {
+      const leftColumn = leftColumnByIndex[mapping.leftIndex]
+      const rightColumn = rightColumnByIndex[mapping.rightIndex]
+
+      return {
+        id: mapping.id,
+        leftIndex: mapping.leftIndex,
+        rightIndex: mapping.rightIndex,
+        leftLabel: leftColumn ? leftColumn.label : columnIndexToLetter(mapping.leftIndex),
+        rightLabel: rightColumn ? rightColumn.label : columnIndexToLetter(mapping.rightIndex),
+        label: leftColumn ? leftColumn.label : columnIndexToLetter(mapping.leftIndex)
+      }
+    })
+
+  const columnByLeftLabel = columns.reduce((target, column) => {
+    target[column.leftLabel] = column
+    return target
+  }, {})
+  const columnByRightLabel = columns.reduce((target, column) => {
+    target[column.rightLabel] = column
+    return target
+  }, {})
+  const changedColumnIds = new Set()
+  const groups = []
+  const groupByKey = {}
+
+  ;(options.changedCells || []).forEach(cell => {
+    const column = columnByLeftLabel[cell.leftColumn] || columnByRightLabel[cell.rightColumn]
+
+    if (!column) {
+      return
+    }
+
+    if (!groupByKey[cell.keyValue]) {
+      groupByKey[cell.keyValue] = {
+        keyValue: cell.keyValue,
+        leftRowNumber: cell.leftRowNumber,
+        rightRowNumber: cell.rightRowNumber,
+        leftValues: {},
+        rightValues: {},
+        changedColumnIds: new Set()
+      }
+      groups.push(groupByKey[cell.keyValue])
+    }
+
+    const group = groupByKey[cell.keyValue]
+    group.leftValues[column.id] = cell.leftValue
+    group.rightValues[column.id] = cell.rightValue
+    group.changedColumnIds.add(column.id)
+    changedColumnIds.add(column.id)
+  })
+
+  const rows = []
+  groups.forEach(group => {
+    const groupChangedColumnIds = Array.from(group.changedColumnIds)
+
+    rows.push({
+      rowId: `${group.keyValue}-left`,
+      pairId: group.keyValue,
+      keyValue: group.keyValue,
+      source: 'left',
+      sourceLabel: '左边',
+      rowNumber: group.leftRowNumber,
+      values: group.leftValues,
+      changedColumnIds: groupChangedColumnIds
+    })
+    rows.push({
+      rowId: `${group.keyValue}-right`,
+      pairId: group.keyValue,
+      keyValue: group.keyValue,
+      source: 'right',
+      sourceLabel: '右边',
+      rowNumber: group.rightRowNumber,
+      values: group.rightValues,
+      changedColumnIds: groupChangedColumnIds
+    })
+  })
+
+  return {
+    columns,
+    defaultSelectedColumnIds: columns
+      .filter(column => changedColumnIds.has(column.id))
+      .map(column => column.id),
+    rows
+  }
+}
+
 function compareRows(options) {
   const enabledMappings = options.mappings.filter(mapping => mapping.enabled)
   const keyMapping = enabledMappings.find(mapping => mapping.id === options.keyMappingId)
@@ -313,5 +413,6 @@ module.exports = {
   buildColumns,
   buildAutoMappings,
   findDuplicateRightMappings,
+  buildHorizontalDiffResult,
   compareRows
 }
