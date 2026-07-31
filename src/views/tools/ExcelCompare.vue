@@ -192,24 +192,72 @@
 
       <el-tabs v-model="resultTab" class="excel-result-tabs">
         <el-tab-pane label="字段差异" name="changed">
-          <el-table :data="result.changedCells" border>
+          <div class="excel-diff-toolbar">
+            <div>
+              <strong>横向对比</strong>
+              <span>每个 Key 两行展示，第一行为左边，第二行为右边。</span>
+            </div>
+            <el-select
+              v-model="selectedDiffColumnIds"
+              multiple
+              collapse-tags
+              filterable
+              class="excel-diff-field-select"
+              placeholder="选择展示字段"
+              :disabled="!horizontalDiff.columns.length"
+            >
+              <el-option
+                v-for="column in horizontalDiff.columns"
+                :key="column.id"
+                :label="column.label"
+                :value="column.id"
+              />
+            </el-select>
+          </div>
+
+          <el-empty
+            v-if="!horizontalDiffRows.length"
+            description="暂无字段差异"
+          />
+          <el-table
+            v-else
+            :data="horizontalDiffRows"
+            border
+            class="excel-horizontal-table"
+            :row-class-name="horizontalRowClassName"
+          >
             <el-table-column prop="keyValue" label="Key" min-width="140" />
-            <el-table-column prop="leftRowNumber" label="左侧行号" width="100" />
-            <el-table-column prop="rightRowNumber" label="右侧行号" width="100" />
-            <el-table-column prop="leftColumn" label="左侧字段" min-width="140" />
-            <el-table-column prop="rightColumn" label="右侧字段" min-width="140" />
             <el-table-column
-              prop="leftValue"
-              label="左侧值"
+              prop="sourceLabel"
+              label="来源"
+              width="90"
+            >
+              <template slot-scope="{ row }">
+                <el-tag
+                  size="mini"
+                  :type="row.source === 'left' ? 'info' : 'success'"
+                >
+                  {{ row.sourceLabel }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="rowNumber" label="行号" width="90" />
+            <el-table-column
+              v-for="column in visibleHorizontalColumns"
+              :key="column.id"
+              :label="column.label"
               min-width="180"
               show-overflow-tooltip
-            />
-            <el-table-column
-              prop="rightValue"
-              label="右侧值"
-              min-width="180"
-              show-overflow-tooltip
-            />
+            >
+              <template slot-scope="{ row }">
+                <span
+                  class="excel-diff-cell"
+                  :class="{ 'excel-diff-cell--changed': isHorizontalCellChanged(row, column.id) }"
+                >
+                  {{ row.values[column.id] }}
+                </span>
+              </template>
+            </el-table-column>
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="仅左侧存在" name="leftOnly">
@@ -252,6 +300,7 @@ const {
   buildColumns,
   buildAutoMappings,
   findDuplicateRightMappings,
+  buildHorizontalDiffResult,
   compareRows
 } = require('@/utils/excelCompareCore')
 
@@ -295,6 +344,12 @@ export default {
       result: createEmptyResult(),
       hasResult: false,
       resultTab: 'changed',
+      horizontalDiff: {
+        columns: [],
+        defaultSelectedColumnIds: [],
+        rows: []
+      },
+      selectedDiffColumnIds: [],
       xlsxModule: null
     }
   },
@@ -342,6 +397,16 @@ export default {
         { label: '仅右侧存在', value: this.result.summary.rightOnlyRows },
         { label: '数据问题', value: this.result.summary.issueRows }
       ]
+    },
+    visibleHorizontalColumns() {
+      const selectedIds = new Set(this.selectedDiffColumnIds)
+      return this.horizontalDiff.columns.filter(column => selectedIds.has(column.id))
+    },
+    horizontalDiffRows() {
+      if (!this.visibleHorizontalColumns.length) {
+        return []
+      }
+      return this.horizontalDiff.rows
     }
   },
   methods: {
@@ -421,6 +486,7 @@ export default {
       this.keyMappingId = this.enabledMappings[0] ? this.enabledMappings[0].id : ''
       this.hasResult = false
       this.result = createEmptyResult()
+      this.resetHorizontalDiff()
     },
     createMappings() {
       if (!this.left.columns.length) {
@@ -452,6 +518,7 @@ export default {
         this.keyMappingId = this.enabledMappings[0] ? this.enabledMappings[0].id : ''
       }
       this.hasResult = false
+      this.resetHorizontalDiff()
     },
     runCompare() {
       if (!this.canCompare) {
@@ -469,6 +536,14 @@ export default {
           keyMappingId: this.keyMappingId,
           mode: this.columnMode
         })
+        this.horizontalDiff = buildHorizontalDiffResult({
+          changedCells: this.result.changedCells,
+          mappings: this.enabledMappings,
+          keyMappingId: this.keyMappingId,
+          leftColumns: this.left.columns,
+          rightColumns: this.right.columns
+        })
+        this.selectedDiffColumnIds = this.horizontalDiff.defaultSelectedColumnIds.slice()
         this.hasResult = true
         this.$message.success('比对完成')
       } catch (error) {
@@ -507,6 +582,20 @@ export default {
     formatValues(values) {
       return JSON.stringify(values)
     },
+    isHorizontalCellChanged(row, columnId) {
+      return row.changedColumnIds.includes(columnId)
+    },
+    horizontalRowClassName({ row }) {
+      return row.source === 'left' ? 'excel-horizontal-row--left' : 'excel-horizontal-row--right'
+    },
+    resetHorizontalDiff() {
+      this.horizontalDiff = {
+        columns: [],
+        defaultSelectedColumnIds: [],
+        rows: []
+      }
+      this.selectedDiffColumnIds = []
+    },
     resetAll() {
       this.left = createWorkbookState()
       this.right = createWorkbookState()
@@ -516,6 +605,7 @@ export default {
       this.result = createEmptyResult()
       this.hasResult = false
       this.resultTab = 'changed'
+      this.resetHorizontalDiff()
     }
   }
 }
@@ -653,10 +743,70 @@ export default {
   border-radius: 8px;
 }
 
+.excel-diff-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 14px 0;
+
+  strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--color-text);
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  span {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+}
+
+.excel-diff-field-select {
+  width: 360px;
+  max-width: 100%;
+}
+
+.excel-horizontal-table {
+  width: 100%;
+}
+
+.excel-diff-cell {
+  display: inline-block;
+  max-width: 100%;
+  min-height: 24px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.excel-diff-cell--changed {
+  background: #fef3c7;
+  color: #92400e;
+  font-weight: 700;
+}
+
+::v-deep .excel-horizontal-row--left td {
+  background: rgba(37, 99, 235, 0.04);
+}
+
+::v-deep .excel-horizontal-row--right td {
+  border-bottom: 2px solid var(--color-border);
+}
+
 [data-theme='dark'] .excel-panel,
 [data-theme='dark'] .excel-result-tabs {
   background: var(--color-surface);
   color: var(--color-text);
+}
+
+[data-theme='dark'] .excel-diff-cell--changed {
+  background: #78350f;
+  color: #fde68a;
 }
 
 @media (max-width: 1024px) {
@@ -676,8 +826,14 @@ export default {
 
   .excel-compare__actions,
   .excel-compare__actions .el-button,
+  .excel-diff-field-select,
   .excel-key-select {
     width: 100%;
+  }
+
+  .excel-diff-toolbar {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .excel-upload-grid,
